@@ -1,20 +1,39 @@
-# Laboratorio Docker hackthebox
+# Dockerización rápida de Parrot para Hack The Box
 
-Este proyecto nacio de la pajita que me daba levantar la maquina de parrot cada vez que queria hacer una maquina en hackthebox.
+Este proyecto nació porque me daba **pajita** levantar una máquina virtual pesada cada vez que quería hacer una caja en Hack The Box 😅.  
+Así que armé este entorno liviano y rápido en Docker, con soporte para VPN de HTB y montaje de workspace directo. Lo uso para resolver labs, entrenar, y tener todo limpio y automatizado.
 
-## Dependencias
+## ¿Qué hace?
 
-- Docker.
-- vpn hacthebox.
+- Levanta un contenedor con Parrot Security Core
+- Conecta automáticamente a tu VPN `.ovpn` de Hack The Box
+- Monta tu carpeta `workspace` para guardar tus scripts, notas o herramientas
+- Todo con un solo comando: `./uplab.sh`
 
-## Preparación previa.
+## Requisitos
 
-Debemos crear los direcotrios workspace y vpn
+- Docker y Docker Compose instalados
+- Archivo `.ovpn` de Hack The Box
+- Permisos de ejecución para `uplab.sh`
 
-```bash
-mkdir workspace vpn
+## Estructura esperada
+
 ```
-una vez creados si tienes tu vpn hackthebox debes moverla a tu directorio vpn.
+└── 📁HackTheBox
+    └── 📁config
+        ├── tmux.conf
+        ├── vimrc
+    └── 📁docker
+        ├── docker-compose.yml
+        ├── Dockerfile
+    └── 📁vpn
+        ├── tu_vpn.ovpn
+    └── 📁workspace
+        └── Aquí va tu magia.
+    ├── .gitignore
+    ├── README.md
+    └── uplab.sh
+```
 
 ## Permisos del script
 
