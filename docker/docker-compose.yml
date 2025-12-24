@@ -1,0 +1,27 @@
+services:
+  htb:
+    container_name: htb-lab
+    hostname: ada-lab
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        NEWUSER: ${NEWUSER}
+        NEWPASS: ${NEWPASS}
+
+    stdin_open: true
+    tty: true
+
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+    volumes:
+      - ../workspace:/home/${NEWUSER}/workspace
+      - ../vpn:/home/${NEWUSER}/vpn
+
+    working_dir: /home/${NEWUSER}/workspace
+    user: ${NEWUSER}
