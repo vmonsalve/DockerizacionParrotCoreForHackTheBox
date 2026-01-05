@@ -4,9 +4,9 @@ show_help() {
   echo "Uso: $0 [opciones]"
   echo ""
   echo "Opciones:"
-  echo "  --help   Muestra esta ayuda"
-  echo "  --build  Construye la imagen Docker con el usuario y contraseña proporcionados desde cero"
-  echo " --rebuild  Fuerza la reconstrucción completa del contenedor (baja, build y up)"
+  echo "  --help     Muestra esta ayuda"
+  echo "  --build    Construye la imagen Docker con el usuario y contraseña proporcionados desde cero"
+  echo "  --rebuild  Fuerza la reconstrucción completa del contenedor (baja, build y up)"
   exit 0
 }
 
@@ -19,7 +19,7 @@ set -e
 PROJECT_DIR="$(dirname "$(realpath "$0")")"
 cd "$PROJECT_DIR"
 
-CONTAINER_NAME="htb-lab"
+CONTAINER_NAME="htb-vnc-lab"
 SESSION="htb"
 
 # Validar y crear directorios necesarios
@@ -34,6 +34,7 @@ NEWPASS="${NEWPASS:-$NEWUSER}"
 
 export NEWUSER
 export NEWPASS
+export CONTAINER_NAME
 
 # --rebuild = bajar + build + up
 if [[ "$1" == "--rebuild" ]]; then
@@ -53,23 +54,12 @@ if [[ "$1" == "--build" ]]; then
     --build-arg NEWUSER="$NEWUSER" \
     --build-arg NEWPASS="$NEWPASS" \
     -f ./docker/Dockerfile \
-    -t lab-htb .
+    -t "$CONTAINER_NAME" .
 fi
 
 echo "[+] Levantando contenedor..."
-#$PROJECT_DIR/docker/
+
 docker compose -f ./docker/docker-compose.yml up -d
 
 echo "[+] Entrando al contenedor..."
-docker exec -it "$CONTAINER_NAME" bash -lc "
-  tmux has-session -t $SESSION 2>/dev/null || (
-    tmux new-session -d -s $SESSION
-    tmux rename-window -t $SESSION:0 'vpn'
-    tmux send-keys -t $SESSION:0 'sudo openvpn --config ~/vpn/starting_point_H4rdC0r3Dev.ovpn' C-m
-
-    tmux split-window -h -t $SESSION
-    tmux rename-window -t $SESSION:1 'work'
-  )
-
-  tmux attach -t $SESSION
-"
+docker exec -it "$CONTAINER_NAME" bash 

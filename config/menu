@@ -1,0 +1,7 @@
+[begin] (Menu Principal)
+    [exec] (Terminal Bash) {/usr/bin/bash}
+    [exec] (Firefox) {/usr/bin/firefox}
+    [separator]
+    [reconfig] (Recargar menú)
+    [exit] (Salir)
+[end]
