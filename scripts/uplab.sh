@@ -16,7 +16,8 @@ fi
 
 set -e
 
-PROJECT_DIR="$(dirname "$(realpath "$0")")"
+PROJECT_DIR="$(dirname "$(realpath "$0")")/.."
+
 cd "$PROJECT_DIR"
 
 CONTAINER_NAME="htb-vnc-lab"
@@ -25,6 +26,9 @@ SESSION="htb"
 # Validar y crear directorios necesarios
 [ ! -d "$PROJECT_DIR/vpn" ] && mkdir -p "$PROJECT_DIR/vpn" && echo "[+] Carpeta 'vpn/' creada."
 [ ! -d "$PROJECT_DIR/workspace" ] && mkdir -p "$PROJECT_DIR/workspace" && echo "[+] Carpeta 'workspace/' creada."
+
+# Verificar si Docker está instalado
+command -v docker >/dev/null 2>&1 || { echo >&2 "Docker no está instalado. Abortando."; exit 1; }
 
 # Pedir usuario y contraseña
 read -p "Ingresa el nombre de usuario para el contenedor: " NEWUSER
@@ -39,10 +43,10 @@ export CONTAINER_NAME
 # --rebuild = bajar + build + up
 if [[ "$1" == "--rebuild" ]]; then
   echo "[+] Limpiando contenedor anterior..."
-  docker compose -f ./docker/docker-compose.yml down
+  docker compose -f "$PROJECT_DIR/docker/docker-compose.yml" down
 
   echo "[+] Rebuild forzado..."
-  docker compose -f ./docker/docker-compose.yml build --no-cache \
+  docker compose -f "$PROJECT_DIR/docker/docker-compose.yml" build --no-cache \
     --build-arg NEWUSER="$NEWUSER" \
     --build-arg NEWPASS="$NEWPASS"
 fi
@@ -53,13 +57,13 @@ if [[ "$1" == "--build" ]]; then
   docker build --no-cache \
     --build-arg NEWUSER="$NEWUSER" \
     --build-arg NEWPASS="$NEWPASS" \
-    -f ./docker/Dockerfile \
+    -f "$PROJECT_DIR/docker/Dockerfile" \
     -t "$CONTAINER_NAME" .
 fi
 
 echo "[+] Levantando contenedor..."
 
-docker compose -f ./docker/docker-compose.yml up -d
+docker compose -f "$PROJECT_DIR/docker/docker-compose.yml" up -d
 
 echo "[+] Entrando al contenedor..."
 
