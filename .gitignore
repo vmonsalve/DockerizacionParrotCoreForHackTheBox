@@ -3,3 +3,5 @@ vpn/
 workspace/
 .env
 *.ovpn
+lab_manager/target/
+lab_manager/Cargo.lock

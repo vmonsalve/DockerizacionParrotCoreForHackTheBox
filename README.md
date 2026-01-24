@@ -16,50 +16,76 @@ Así que armé este entorno liviano y rápido en Docker, con soporte para VPN de
 - Archivo `.ovpn` de Hack The Box
 - Permisos de ejecución para `uplab.sh`
 
-## Estructura esperada
+## ⚠️ Nota sobre Docker en macOS (Apple Silicon)
 
-```
-└── 📁HackTheBox
-    └── 📁config
-        ├── tmux.conf
-        ├── vimrc
-    └── 📁docker
-        ├── docker-compose.yml
-        ├── Dockerfile
-    └── 📁vpn
-        ├── tu_vpn.ovpn
-    └── 📁workspace
-        └── Aquí va tu magia.
-    ├── .gitignore
-    ├── README.md
-    └── uplab.sh
-```
-
-## Permisos del script
+Este proyecto fue desarrollado y probado en macOS utilizando **Colima** como runtime de Docker, en equipos con arquitectura **Apple Silicon (ARM64)**.
+Para asegurar compatibilidad con SQL Server y algunas imágenes utilizadas, Colima se ejecuta especificando arquitectura:
 
 ```bash
-chmod +x uplab.sh
+colima start --disk 20 --cpu 8 --memory 8 --arch x86_64
 ```
-## Si inicias por primera vez la maquina
+
+# Comenzamos
+
+## Preparando el entorno
+
+Lo primero que demos hacer es crear los siguientes directorios
 
 ```bash
-./uplab.sh --build
+mkdir workspace
 ```
-## Si quieres recompilar lo que ya tienes
+y
 
 ```bash
-./uplab.sh --rebuild
+mkdir vpn
 ```
+En primer directorio quedaran todos nuestros archivos creados desde el contendor en nuestro local.
+El segundo directorio es para guardar la vpn que nos da acceso a hackthebox
 
-## Para ver las opciones del comando
+## Permisos
+
+Para que cada script funcione de forma correcta debemos darles permismos de ejecucion
 
 ```bash
-./uplab.sh --help
+chmod +x scripts/*.sh
+```
+Luego debemos dar permisos a nuesro menu principal
+
+```bash
+chmod +x menu.sh
 ```
 
-## Proximas mejoras.
+## Menu de despliegue
 
-- Automatizar creacion de los directorios.
-- Dejarlo mas customizable para laboratorios locales.
+Para levantar nuestro entorno tenemos un menu que se ejecuta de la siguiente manera
+
+```bash
+./menu.sh
+```
+Al inciar nos muestra la siguiente pantalla
+
+![Menu Hack The Box](images/menuhtb.jpg "Menu Hack The Box")
+
+Elegimos la opcion 3 para desplegar el contenedor.
+
+Al final nos mostrara la siguiente pantalla lista para trabajar en hackthebox
+![Docker tmux](images/dockertmuxverticalsplit.jpg "Docker Tmux")
+Tambien tenemos una opcion visual que entramos a travez de vnc, para eso usamos TigerVNC.
+
+![TigerVNC](images/tigervnc.jpg "TigerVNC")
+
+Y como url en el servidor vnc colocamos 
+
+localhost:5901
+
+Presionamos en conectar y se nos despliega la ventana para colocar nuestra password, en mi caso es la misma que la del user.
+
+![TigerVNC Password](images/vncpassword.jpg "TigerVNC Passowrd")
+
+Presionamos aceptar luego de poner nuestra password y nos despliega nuestro entorno grafico.
+
+![TigerVNC](images/dockergrafico.jpg "TigerVNC")
+
+Desde aqui podremos usar firefox y otras herramientas graficas que vallamos necesitando.
 
 desarrollado por vmonsalve.
